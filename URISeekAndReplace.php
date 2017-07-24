@@ -2,7 +2,7 @@
 
 class URISeekAndReplace {
     private $protocols = "mailto|http";
-    private $domains = "aero|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|ct|cu|cv|cx|cy|cz|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mn|mn|mo|mp|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|nom|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ra|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw|arpa|рф";
+    private $domains = "aero|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|tech|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|ct|cu|cv|cx|cy|cz|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|group|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mn|mn|mo|mp|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|nom|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ra|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw|arpa|рф";
     private $uriRegexes = [];
     /**
      * Различные части регулярных выражений, используемые при компиляции полного шаблона
@@ -31,7 +31,7 @@ class URISeekAndReplace {
 //        \n банк.рф:8080
 //        \n 11.txt";
     
-    private $testString = "ru.com.ca";
+    private $testString = "rostelecom.omnichat.tech";
     
     public function test() {
         echo "||||||||||||||||||| URISeekAndReplace TEST |||||||||||||||||||\n\n";
@@ -42,7 +42,8 @@ class URISeekAndReplace {
     
     public function __construct() {
         $this->uriRegexes["abstract"] = "/(?:(\w{2,16}):(?:\/){0,2})?(?:[a-zа-я0-9]{2,}[\.:@])+\S{2,}/i";
-        $this->uriRegexParts["ipv4"] = "(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))";
+//        $this->uriRegexParts["ipv4"] = "(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))";
+        $this->uriRegexParts["ipv4"] = "(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))";
         $this->uriRegexParts["host"] = "(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:{$this->domains}))";
         $this->uriRegexParts["port"] = ":\d{2,5}";
         $this->uriRegexParts["mailName"] = "[^\s]*";
@@ -81,15 +82,15 @@ class URISeekAndReplace {
      * @return string
      */
     public function replaceHttp($src) {
-        $regex = "/((?:https?|sftp|ftps?):\/\/)?({$this->uriRegexParts["ipv4"]}|{$this->uriRegexParts["host"]})({$this->uriRegexParts["port"]})?({$this->uriRegexParts["path"]})?/{$this->regexFlags}";
+        $regex = "/^((?:https?|sftp|ftps?):\/\/)?({$this->uriRegexParts["ipv4"]}|{$this->uriRegexParts["host"]})({$this->uriRegexParts["port"]})?({$this->uriRegexParts["path"]})?$/{$this->regexFlags}";
         if (($matches = $this->pregMatch($src, $regex)) === false)
             return $src;
-        $protocol = !empty($matches[1]) ? $matches[1] : "http://";
+        $protocol = !empty($matches[1]) ? $matches[1] : "";
         $host = $matches[2];
         $port = isset($matches[3]) && !empty($matches[3]) ? $matches[3] : "";
         $path = isset($matches[4]) && !empty($matches[4]) ? $matches[4] : "";
         $needle = "{$protocol}{$host}{$port}{$path}";
-        return $this->replace($needle, $protocol, $src);
+        return $this->replace($needle, (empty($protocol) ? "http://" : ""), $src);
     }
     private function replaceHttps($src) {
         return $this->replaceHttp($src);
@@ -104,7 +105,7 @@ class URISeekAndReplace {
         return $this->replaceHttp($src);
     }
     private function replaceMailto($src) {
-        $regex = "/(?:mailto:)?({$this->uriRegexParts["mailName"]})@({$this->uriRegexParts["host"]})/{$this->regexFlags}";
+        $regex = "/^(?:mailto:)?({$this->uriRegexParts["mailName"]})@({$this->uriRegexParts["host"]})$/{$this->regexFlags}";
         if (($matches = $this->pregMatch($src, $regex)) === false) {
 //            var_dump("{$src} does not fit MAIL");
             return $src;
@@ -141,9 +142,13 @@ class URISeekAndReplace {
         return $src;
     }
     private function callReplacer($protocol, $src) {
-        return call_user_func("self::replace" . ucfirst($protocol), $src);
+        $methodName = "replace" . ucfirst($protocol);
+        if (!method_exists($this, $methodName))
+            return $src;
+        
+        return call_user_func("self::" . $methodName, $src);
     }
 }
 
-//$test = new URISeekAndReplace();
-//$test->test();
+$test = new URISeekAndReplace();
+$test->test();
