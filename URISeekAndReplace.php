@@ -88,7 +88,8 @@ class URISeekAndReplace {
         $host = $matches[2];
         $port = isset($matches[3]) && !empty($matches[3]) ? $matches[3] : "";
         $path = isset($matches[4]) && !empty($matches[4]) ? $matches[4] : "";
-        return "<a href=\"{$protocol}{$host}{$port}{$path}\">{$src}</a>";
+        $needle = "{$protocol}{$host}{$port}{$path}";
+        return $this->replace($needle, $protocol, $src);
     }
     private function replaceHttps($src) {
         return $this->replaceHttp($src);
@@ -110,12 +111,17 @@ class URISeekAndReplace {
         }
         $name = $matches[1];
         $host = $matches[2];
-        return "<a href=\"mailto:{$name}@{$host}\">{$src}</a>";
+        $needle = "{$name}@{$host}";
+        return $this->replace($needle, "mailto:", $src);
     }
     private function pregMatch($src, $regex) {
         $matches = [];
         preg_match($regex, $src, $matches);
         return !empty($matches) ? $matches : false;
+    }
+    private function replace($needle, $protocol, $haystack) {
+        $replaced = "<a href=\"{$protocol}{$needle}\">{$needle}</a>";
+        return str_replace($needle, $replaced, $haystack);
     }
     /**
      * Перебирает все возможные функции замены
