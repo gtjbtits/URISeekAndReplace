@@ -12,26 +12,27 @@ class URISeekAndReplace {
     protected $uriRegexParts = [];
     protected $regexFlags = "u";
     
-//    private $testString = "Sample text for testing:
-//        abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-//        0123456789 _+-.,!@#$%^&*();\/|<>\"'
-//        12345 -98.7 3.141 .6180 9,000 +42
-//        555.123.4567  +1-(800)-555-2468
-//        foo@demo.net  bar.ba@test.co.uk
-//        www.demo.com  http://foo.co.uk/
-//        http://regexr.com/foo.html?q=bar
-//        https://mediatemple.net
-//        \n https://dreamteams.atlassian.net/browse/MES-1425
-//        \n google..................com
-//        \n google.com
-//        \n Николай Зайцев, [18.07.17 17:21]
-//        \n mailto:google@com.com
-//        \n mailto:me@me.ct
-//        \n https://80.80.80.80/fwefew543565443^%&E#&#@$%@%$%$#%#^@^@#\$EWQE
-//        \n банк.рф:8080
-//        \n 11.txt";
-    
-    protected $testString = "бАнк.рф млюс.рф полюс.рф";
+    private $testString = "<pre>Sample text for testing:
+       abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+       0123456789 _+-.,!@#$%^&*();\/|<>\"'
+       12345 -98.7 3.141 .6180 9,000 +42
+       555.123.4567  +1-(800)-555-2468
+       foo@demo.net  bar.ba@test.co.uk
+       www.demo.com  http://foo.co.uk/
+       http://regexr.com/foo.html?q=bar
+       https://mediatemple.net
+       \n https://dreamteams.atlassian.net/browse/MES-1425
+       \n google..................com
+       \n google.com
+       \n Николай Зайцев, [18.07.17 17:21]
+       \n mailto:google@com.com
+       \n mailto:me@me.ct
+       \n https://80.80.80.80/fwefew543565443^%&E#&#@$%@%$%$#%#^@^@#\$EWQE
+       \n банк.рф:8080
+       \n бАнк.рф млюс.рф полюс.рф
+       \n nio.com nio.com nio.com
+       \n тест.рф тест.рф тест.рф
+       \n 11.txt</pre>";
     
     public function test() {
         echo "||||||||||||||||||| URISeekAndReplace TEST |||||||||||||||||||\n\n";
@@ -61,15 +62,18 @@ class URISeekAndReplace {
     
     public function processText(&$text) {
         $abstracts = [];
+        $lastpos = 0;
         preg_match_all($this->uriRegexes["abstract"], $text, $abstracts);
         foreach ($abstracts[0] as $k=>$link) {
             $protocol = $abstracts[1][$k];
-//            var_dump("Handle {$link}. Protocol: {$protocol}");
-            if (!empty($protocol))
+            if (!empty($protocol)) {
                 $replaced = $this->callReplacer($protocol, $link);
-            else
+            } else {
                 $replaced = $this->replaceUnknown($link);
-            $text = str_replace($link, $replaced, $text);
+            }
+            $pos = strpos($text, $link, $lastpos);
+            $text = substr_replace($text, $replaced, $pos, strlen($link));
+            $lastpos = $pos + strlen($replaced);
         }
     }
     
@@ -114,15 +118,16 @@ class URISeekAndReplace {
         return $this->replaceHttp($src);
     }
     protected function replaceMailto($src) {
-        $regex = "/^(?:mailto:)?({$this->uriRegexParts["mailName"]})@({$this->uriRegexParts["host"]})$/{$this->regexFlags}";
+        $regex = "/^((?:mailto:))?({$this->uriRegexParts["mailName"]})@({$this->uriRegexParts["host"]})$/{$this->regexFlags}";
         if (($matches = $this->pregMatch($src, $regex)) === false) {
 //            var_dump("{$src} does not fit MAIL");
             return $src;
         }
-        $name = $matches[1];
-        $host = $matches[2];
-        $needle = "{$name}@{$host}";
-        return $this->replace($needle, "mailto:", $src);
+        $protocol = !empty($matches[1]) ? $matches[1] : "";
+        $name = $matches[2];
+        $host = $matches[3];
+        $needle = "{$protocol}{$name}@{$host}";
+        return $this->replace($needle, (empty($protocol) ? "mailto:" : ""), $src);
     }
     protected function pregMatch($src, $regex) {
         $matches = [];
